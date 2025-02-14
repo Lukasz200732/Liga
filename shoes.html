@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wszystko o Lidze - Buty</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #1e1e2f, #2e2e5c);
+            color: #fff;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .champion-select {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .champion-select select {
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #444;
+            border-radius: 4px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #444;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .back-button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Buty</h1>
+        <div class="champion-select">
+            <h2>Wybierz Postacie</h2>
+            <select id="champion1"></select>
+            <select id="champion2"></select>
+            <select id="champion3"></select>
+            <select id="champion4"></select>
+            <select id="champion5"></select>
+            <button onclick="recommendShoes()">Rekomenduj Buty</button>
+        </div>
+        <div class="result" id="result">
+            <!-- Wynik rekomendacji butów będzie wyświetlany tutaj -->
+        </div>
+        <a href="index.html" class="back-button">Powrót do strony głównej</a>
+    </div>
+
+    <script>
+        const champions = [
+            { name: 'Aatrox', type: 'AD' },
+            { name: 'Ahri', type: 'AP' },
+            { name: 'Akali', type: 'AP' },
+            { name: 'Alistar', type: 'AP' },
+            { name: 'Amumu', type: 'AP' },
+            { name: 'Anivia', type: 'AP' },
+            { name: 'Annie', type: 'AP' },
+            { name: 'Aphelios', type: 'AD' },
+            { name: 'Ashe', type: 'AD' },
+            { name: 'Aurelion Sol', type: 'AP' },
+            { name: 'Azir', type: 'AP' },
+            { name: 'Bard', type: 'AP' },
+            { name: 'Blitzcrank', type: 'AP' },
+            { name: 'Brand', type: 'AP' },
+            { name: 'Braum', type: 'AP' },
+            { name: 'Caitlyn', type: 'AD' },
+            { name: 'Camille', type: 'AD' },
+            { name: 'Cassiopeia', type: 'AP' },
+            { name: 'Cho\'Gath', type: 'AP' },
+            { name: 'Corki', type: 'AD' },
+            { name: 'Darius', type: 'AD' },
+            { name: 'Diana', type: 'AP' },
+            { name: 'Dr. Mundo', type: 'AP' },
+            { name: 'Draven', type: 'AD' },
+            { name: 'Ekko', type: 'AP' },
+            { name: 'Elise', type: 'AP' },
+            { name: 'Evelynn', type: 'AP' },
+            { name: 'Ezreal', type: 'AD' },
+            { name: 'Fiddlesticks', type: 'AP' },
+            { name: 'Fiora', type: 'AD' },
+            { name: 'Fizz', type: 'AP' },
+            { name: 'Galio', type: 'AP' },
+            { name: 'Gangplank', type: 'AD' },
+            { name: 'Garen', type: 'AD' },
+            { name: 'Gnar', type: 'AD' },
+            { name: 'Gragas', type: 'AP' },
+            { name: 'Graves', type: 'AD' },
+            { name: 'Gwen', type: 'AP' },
+            { name: 'Hecarim', type: 'AD' },
+            { name: 'Heimerdinger', type: 'AP' },
+            { name: 'Illaoi', type: 'AD' },
+            { name: 'Irelia', type: 'AD' },
+            { name: 'Ivern', type: 'AP' },
+            { name: 'Janna', type: 'AP' },
+            { name: 'Jarvan IV', type: 'AD' },
+            { name: 'Jax', type: 'AD' },
+            { name: 'Jayce', type: 'AD' },
+            { name: 'Jhin', type: 'AD' },
+            { name: 'Jinx', type: 'AD' },
+            { name: 'Kai\'Sa', type: 'AD' },
+            { name: 'Kalista', type: 'AD' },
+            { name: 'Karma', type: 'AP' },
+            { name: 'Karthus', type: 'AP' },
+            { name: 'Kassadin', type: 'AP' },
+            { name: 'Katarina', type: 'AP' },
+            { name: 'Kayle', type: 'AP' },
+            { name: 'Kayn', type: 'AD' },
+            { name: 'Kennen', type: 'AP' },
+            { name: 'Kha\'Zix', type: 'AD' },
+            { name: 'Kindred', type: 'AD' },
+            { name: 'Kled', type: 'AD' },
+            { name: 'Kog\'Maw', type: 'AP' },
+            { name: 'LeBlanc', type: 'AP' },
+            { name: 'Lee Sin', type: 'AD' },
+            { name: 'Leona', type: 'AP' },
+            { name: 'Lillia', type: 'AP' },
+            { name: 'Lissandra', type: 'AP' },
+            { name: 'Lucian', type: 'AD' },
+            { name: 'Lulu', type: 'AP' },
+            { name: 'Lux', type: 'AP' },
+            { name: 'Malphite', type: 'AP' },
+            { name: 'Malzahar', type: 'AP' },
+            { name: 'Maokai', type: 'AP' },
+            { name: 'Master Yi', type: 'AD' },
+            { name: 'Miss Fortune', type: 'AD' },
+            { name: 'Mordekaiser', type: 'AP' },
+            { name: 'Morgana', type: 'AP' },
+            { name: 'Nami', type: 'AP' },
+            { name: 'Nasus', type: 'AD' },
+            { name: 'Nautilus', type: 'AP' },
+            { name: 'Neeko', type: 'AP' },
+            { name: 'Nidalee', type: 'AP' },
+            { name: 'Nocturne', type: 'AD' },
+            { name: 'Nunu & Willump', type: 'AP' },
+            { name: 'Olaf', type: 'AD' },
+            { name: 'Orianna', type: 'AP' },
+            { name: 'Ornn', type: 'AP' },
+            { name: 'Pantheon', type: 'AD' },
+            { name: 'Poppy', type: 'AD' },
+            { name: 'Pyke', type: 'AD' },
+            { name: 'Qiyana', type: 'AD' },
+            { name: 'Quinn', type: 'AD' },
+            { name: 'Rakan', type: 'AP' },
+            { name: 'Rammus', type: 'AP' },
+            { name: 'Rek\'Sai', type: 'AD' },
+            { name: 'Rell', type: 'AP' },
+            { name: 'Renekton', type: 'AD' },
+            { name: 'Rengar', type: 'AD' },
+            { name: 'Riven', type: 'AD' },
+            { name: 'Rumble', type: 'AP' },
+            { name: 'Ryze', type: 'AP' },
+            { name: 'Samira', type: 'AD' },
+            { name: 'Sejuani', type: 'AP' },
+            { name: 'Senna', type: 'AD' },
+            { name: 'Seraphine', type: 'AP' },
+            { name: 'Sett', type: 'AD' },
+            { name: 'Shaco', type: 'AD' },
+            { name: 'Shen', type: 'AP' },
+            { name: 'Shyvana', type: 'AP' },
+            { name: 'Singed', type: 'AP' },
+            { name: 'Sion', type: 'AD' },
+            { name: 'Sivir', type: 'AD' },
+            { name: 'Skarner', type: 'AP' },
+            { name: 'Sona', type: 'AP' },
+            { name: 'Soraka', type: 'AP' },
+            { name: 'Swain', type: 'AP' },
+            { name: 'Sylas', type: 'AP' },
+            { name: 'Syndra', type: 'AP' },
+            { name: 'Tahm Kench', type: 'AP' },
+            { name: 'Taliyah', type: 'AP' },
+            { name: 'Talon', type: 'AD' },
+            { name: 'Taric', type: 'AP' },
+            { name: 'Teemo', type: 'AP' },
+            { name: 'Thresh', type: 'AP' },
+            { name: 'Tristana', type: 'AD' },
+            { name: 'Trundle', type: 'AD' },
+            { name: 'Tryndamere', type: 'AD' },
+            { name: 'Twisted Fate', type: 'AP' },
+            { name: 'Twitch', type: 'AD' },
+            { name: 'Udyr', type: 'AD' },
+            { name: 'Urgot', type: 'AD' },
+            { name: 'Varus', type: 'AD' },
+            { name: 'Vayne', type: 'AD' },
+            { name: 'Veigar', type: 'AP' },
+            { name: 'Vel\'Koz', type: 'AP' },
+            { name: 'Vex', type: 'AP' },
+            { name: 'Vi', type: 'AD' },
+            { name: 'Viego', type: 'AD' },
+            { name: 'Viktor', type: 'AP' },
+            { name: 'Vladimir', type: 'AP' },
+            { name: 'Volibear', type: 'AP' },
+            { name: 'Warwick', type: 'AD' },
+            { name: 'Wukong', type: 'AD' },
+            { name: 'Xayah', type: 'AD' },
+            { name: 'Xerath', type: 'AP' },
+            { name: 'Xin Zhao', type: 'AD' },
+            { name: 'Yasuo', type: 'AD' },
+            { name: 'Yone', type: 'AD' },
+            { name: 'Yorick', type: 'AD' },
+            { name: 'Yuumi', type: 'AP' },
+            { name: 'Zac', type: 'AP' },
+            { name: 'Zed', type: 'AD' },
+            { name: 'Ziggs', type: 'AP' },
+            { name: 'Zilean', type: 'AP' },
+            { name: 'Zoe', type: 'AP' },
+            { name: 'Zyra', type: 'AP' }
+        ];
+
+        function populateChampionSelects() {
+            const selects = document.querySelectorAll('.champion-select select');
+            const options = champions.map(champion => `<option value="${champion.name}">${champion.name}</option>`).join('');
+            selects.forEach(select => select.innerHTML = options);
+        }
+
+        function recommendShoes() {
+            const selectedChampions = [
+                document.getElementById('champion1').value,
+                document.getElementById('champion2').value,
+                document.getElementById('champion3').value,
+                document.getElementById('champion4').value,
+                document.getElementById('champion5').value
+            ];
+
+            const counts = { AD: 0, AP: 0 };
+            selectedChampions.forEach(name => {
+                const champion = champions.find(champ => champ.name === name);
+                if (champion) {
+                    counts[champion.type]++;
+                }
+            });
+
+            const result = document.getElementById('result');
+            if (counts.AD > counts.AP) {
+                result.innerHTML = '<h2>Rekomendowane Buty: Pancerniaki</h2><p>Więcej postaci AD w drużynie.</p>';
+            } else {
+                result.innerHTML = '<h2>Rekomendowane Buty: Merkurego</h2><p>Więcej postaci AP w drużynie.</p>';
+            }
+        }
+
+        populateChampionSelects();
+    </script>
+</body>
+</html>
