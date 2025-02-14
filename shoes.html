@@ -7,7 +7,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: linear-gradient(45deg, #1e1e2f, #2e2e5c);
+            background: black;
             color: #fff;
             text-align: center;
             min-height: 100vh;
@@ -20,27 +20,67 @@
             max-width: 1200px;
             margin: 20px;
             padding: 20px;
-            background: #333;
+            background: rgba(51, 51, 51, 0.9);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .champion-select {
             margin-top: 20px;
             text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .champion-select select {
-            padding: 10px;
+        .champion-select .select-container {
+            margin-bottom: 10px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .champion-select input {
+            padding: 8px;
             border-radius: 4px;
             border: none;
-            margin-bottom: 10px;
             width: 100%;
-            max-width: 300px;
+            max-width: 250px;
+            background: #444;
+            color: #fff;
+        }
+        .autocomplete-suggestions {
+            position: absolute;
+            background: #444;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            max-width: 250px;
+            z-index: 1000;
+        }
+        .autocomplete-suggestion {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .autocomplete-suggestion img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+        .autocomplete-suggestion:hover {
+            background: #555;
         }
         .result {
             margin-top: 20px;
             padding: 20px;
             background: #444;
             border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .back-button {
             display: inline-block;
@@ -54,23 +94,88 @@
         .back-button:hover {
             background: #555;
         }
+        .search-bar {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .search-bar input {
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            margin-right: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .shoe-icon {
+            width: 50px;
+            height: 50px;
+            margin-top: 10px;
+            display: none;
+        }
+        .recommend-button {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .recommend-button:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+        .selected-champion {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .selected-champion img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Buty</h1>
         <div class="champion-select">
-            <h2>Wybierz Postacie</h2>
-            <select id="champion1"></select>
-            <select id="champion2"></select>
-            <select id="champion3"></select>
-            <select id="champion4"></select>
-            <select id="champion5"></select>
-            <button onclick="recommendShoes()">Rekomenduj Buty</button>
+            <div class="select-container">
+                <input type="text" id="champion1" placeholder="Wpisz nazwę bohatera..." oninput="showSuggestions(this, 1)">
+                <div id="suggestions1" class="autocomplete-suggestions"></div>
+                <div id="selectedChampion1" class="selected-champion"></div>
+            </div>
+            <div class="select-container">
+                <input type="text" id="champion2" placeholder="Wpisz nazwę bohatera..." oninput="showSuggestions(this, 2)">
+                <div id="suggestions2" class="autocomplete-suggestions"></div>
+                <div id="selectedChampion2" class="selected-champion"></div>
+            </div>
+            <div class="select-container">
+                <input type="text" id="champion3" placeholder="Wpisz nazwę bohatera..." oninput="showSuggestions(this, 3)">
+                <div id="suggestions3" class="autocomplete-suggestions"></div>
+                <div id="selectedChampion3" class="selected-champion"></div>
+            </div>
+            <div class="select-container">
+                <input type="text" id="champion4" placeholder="Wpisz nazwę bohatera..." oninput="showSuggestions(this, 4)">
+                <div id="suggestions4" class="autocomplete-suggestions"></div>
+                <div id="selectedChampion4" class="selected-champion"></div>
+            </div>
+            <div class="select-container">
+                <input type="text" id="champion5" placeholder="Wpisz nazwę bohatera..." oninput="showSuggestions(this, 5)">
+                <div id="suggestions5" class="autocomplete-suggestions"></div>
+                <div id="selectedChampion5" class="selected-champion"></div>
+            </div>
+            <button class="recommend-button" onclick="recommendShoes()">Rekomenduj Buty</button>
         </div>
         <div class="result" id="result">
             <!-- Wynik rekomendacji butów będzie wyświetlany tutaj -->
         </div>
+        <img src="https://ddragon.leagueoflegends.com/cdn/11.9.1/img/item/3047.png" alt="Pancerniaki" class="shoe-icon" id="pancerniaki">
+        <img src="https://ddragon.leagueoflegends.com/cdn/11.9.1/img/item/3111.png" alt="Merkurego" class="shoe-icon" id="merkurego">
         <a href="index.html" class="back-button">Powrót do strony głównej</a>
     </div>
 
@@ -94,11 +199,11 @@
             { name: 'Caitlyn', type: 'AD' },
             { name: 'Camille', type: 'AD' },
             { name: 'Cassiopeia', type: 'AP' },
-            { name: 'Cho\'Gath', type: 'AP' },
+            { name: 'ChoGath', type: 'AP' },
             { name: 'Corki', type: 'AD' },
             { name: 'Darius', type: 'AD' },
             { name: 'Diana', type: 'AP' },
-            { name: 'Dr. Mundo', type: 'AP' },
+            { name: 'DrMundo', type: 'AP' },
             { name: 'Draven', type: 'AD' },
             { name: 'Ekko', type: 'AP' },
             { name: 'Elise', type: 'AP' },
@@ -125,7 +230,7 @@
             { name: 'Jayce', type: 'AD' },
             { name: 'Jhin', type: 'AD' },
             { name: 'Jinx', type: 'AD' },
-            { name: 'Kai\'Sa', type: 'AD' },
+            { name: 'KaiSa', type: 'AD' },
             { name: 'Kalista', type: 'AD' },
             { name: 'Karma', type: 'AP' },
             { name: 'Karthus', type: 'AP' },
@@ -134,10 +239,10 @@
             { name: 'Kayle', type: 'AP' },
             { name: 'Kayn', type: 'AD' },
             { name: 'Kennen', type: 'AP' },
-            { name: 'Kha\'Zix', type: 'AD' },
+            { name: 'Khazix', type: 'AD' },
             { name: 'Kindred', type: 'AD' },
             { name: 'Kled', type: 'AD' },
-            { name: 'Kog\'Maw', type: 'AP' },
+            { name: 'KogMaw', type: 'AP' },
             { name: 'LeBlanc', type: 'AP' },
             { name: 'Lee Sin', type: 'AD' },
             { name: 'Leona', type: 'AP' },
@@ -170,7 +275,7 @@
             { name: 'Quinn', type: 'AD' },
             { name: 'Rakan', type: 'AP' },
             { name: 'Rammus', type: 'AP' },
-            { name: 'Rek\'Sai', type: 'AD' },
+            { name: 'RekSai', type: 'AD' },
             { name: 'Rell', type: 'AP' },
             { name: 'Renekton', type: 'AD' },
             { name: 'Rengar', type: 'AD' },
@@ -210,7 +315,7 @@
             { name: 'Varus', type: 'AD' },
             { name: 'Vayne', type: 'AD' },
             { name: 'Veigar', type: 'AP' },
-            { name: 'Vel\'Koz', type: 'AP' },
+            { name: 'VelKoz', type: 'AP' },
             { name: 'Vex', type: 'AP' },
             { name: 'Vi', type: 'AD' },
             { name: 'Viego', type: 'AD' },
@@ -234,10 +339,26 @@
             { name: 'Zyra', type: 'AP' }
         ];
 
-        function populateChampionSelects() {
-            const selects = document.querySelectorAll('.champion-select select');
-            const options = champions.map(champion => `<option value="${champion.name}">${champion.name}</option>`).join('');
-            selects.forEach(select => select.innerHTML = options);
+        function showSuggestions(input, index) {
+            const searchText = input.value.toLowerCase();
+            const suggestions = champions
+                .filter(champion => champion.name.toLowerCase().includes(searchText))
+                .map(champion => `
+                    <div class="autocomplete-suggestion" onclick="selectChampion('${champion.name}', ${index})">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${champion.name.replace(/ /g, '').replace(/'/g, '').replace(/\./g, '')}.png" alt="${champion.name}">
+                        ${champion.name}
+                    </div>
+                `).join('');
+            document.getElementById(`suggestions${index}`).innerHTML = suggestions;
+        }
+
+        function selectChampion(name, index) {
+            document.getElementById(`champion${index}`).value = name;
+            document.getElementById(`suggestions${index}`).innerHTML = '';
+            document.getElementById(`selectedChampion${index}`).innerHTML = `
+                <img src="https://ddragon.leagueoflegends.com/cdn/11.9.1/img/champion/${name.replace(/ /g, '').replace(/'/g, '').replace(/\./g, '')}.png" alt="${name}">
+                ${name}
+            `;
         }
 
         function recommendShoes() {
@@ -258,14 +379,19 @@
             });
 
             const result = document.getElementById('result');
+            const pancerniaki = document.getElementById('pancerniaki');
+            const merkurego = document.getElementById('merkurego');
+
             if (counts.AD > counts.AP) {
                 result.innerHTML = '<h2>Rekomendowane Buty: Pancerniaki</h2><p>Więcej postaci AD w drużynie.</p>';
+                pancerniaki.style.display = 'block';
+                merkurego.style.display = 'none';
             } else {
                 result.innerHTML = '<h2>Rekomendowane Buty: Merkurego</h2><p>Więcej postaci AP w drużynie.</p>';
+                pancerniaki.style.display = 'none';
+                merkurego.style.display = 'block';
             }
         }
-
-        populateChampionSelects();
     </script>
 </body>
 </html>
