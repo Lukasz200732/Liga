@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>League of Legends - Postacie i Umiejętności</title>
+    <title>Wszystko o Lidze - Postacie i Umiejętności</title>
     <style>
         body {
             margin: 0;
@@ -14,6 +14,7 @@
             background: #111;
             padding: 20px;
             text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         header h1 {
             margin: 0;
@@ -22,6 +23,7 @@
         nav {
             background: #222;
             overflow: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         nav a {
             float: left;
@@ -29,9 +31,22 @@
             padding: 14px 20px;
             color: #fff;
             text-decoration: none;
+            transition: background 0.3s;
         }
         nav a:hover {
             background: #444;
+        }
+        .banner {
+            background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg') no-repeat center center;
+            background-size: cover;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-size: 48px;
+            font-weight: bold;
         }
         .container {
             padding: 20px;
@@ -47,7 +62,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             text-align: center;
-            transition: transform 0.3s;
+            transition: transform 0.3s, background 0.3s;
         }
         .champion:hover {
             transform: scale(1.05);
@@ -77,6 +92,7 @@
             position: fixed;
             bottom: 0;
             width: 100%;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
         }
         @media (max-width: 600px) {
             nav a {
@@ -98,20 +114,63 @@
         .map-icon:hover {
             transform: scale(1.1);
         }
+        .search-bar {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-bar input, .search-bar select {
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            margin-right: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .reset-button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            background: #444;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .reset-button:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>League of Legends</h1>
+        <h1>Wszystko o Lidze</h1>
         <p>Wybierz swojego bohatera i poznaj jego umiejętności</p>
     </header>
     <nav>
         <a href="#champions">Postacie</a>
         <a href="rules.html">O Grze</a>
-        <a href="contact.html">Kontakt</a>
+        <a href="player.html">Gracz</a>
+        <a href="https://u.gg/lol/tier-list" target="_blank">Tierlisty</a>
+        <a href="mastery.html">Maestria</a>
     </nav>
+    <div class="banner">
+        League of Legends
+    </div>
     <div class="container" id="champions">
         <h2>Postacie</h2>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Wyszukaj bohatera...">
+            <select id="roleFilter">
+                <option value="">Wszystkie role</option>
+                <option value="Top">Top</option>
+                <option value="Jungle">Jungle</option>
+                <option value="Mid">Mid</option>
+                <option value="ADC">ADC</option>
+                <option value="Support">Support</option>
+            </select>
+            <button class="reset-button" id="resetButton">Resetuj filtry</button>
+        </div>
         <div class="champion-grid" id="championGrid">
             <!-- Champions will be loaded dynamically -->
         </div>
@@ -125,19 +184,208 @@
                 const response = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/pl_PL/champion.json`);
                 const data = await response.json();
                 const champions = Object.values(data.data);
+
+                // Dodaj role do championów
+                const roles = {
+                    "Aatrox": ["Top"],
+                    "Ahri": ["Mid"],
+                    "Akali": ["Mid", "Top"],
+                    "Alistar": ["Support"],
+                    "Amumu": ["Jungle"],
+                    "Anivia": ["Mid"],
+                    "Annie": ["Mid"],
+                    "Aphelios": ["ADC"],
+                    "Ashe": ["ADC"],
+                    "Aurelion Sol": ["Mid"],
+                    "Azir": ["Mid"],
+                    "Bard": ["Support"],
+                    "Blitzcrank": ["Support"],
+                    "Brand": ["Support", "Mid"],
+                    "Braum": ["Support"],
+                    "Caitlyn": ["ADC"],
+                    "Camille": ["Top"],
+                    "Cassiopeia": ["Mid"],
+                    "Cho'Gath": ["Top", "Mid"],
+                    "Corki": ["Mid"],
+                    "Darius": ["Top"],
+                    "Diana": ["Mid", "Jungle"],
+                    "Dr. Mundo": ["Top"],
+                    "Draven": ["ADC"],
+                    "Ekko": ["Mid", "Jungle"],
+                    "Elise": ["Jungle"],
+                    "Evelynn": ["Jungle"],
+                    "Ezreal": ["ADC"],
+                    "Fiddlesticks": ["Jungle"],
+                    "Fiora": ["Top"],
+                    "Fizz": ["Mid"],
+                    "Galio": ["Mid", "Support"],
+                    "Gangplank": ["Top"],
+                    "Garen": ["Top"],
+                    "Gnar": ["Top"],
+                    "Gragas": ["Top", "Jungle"],
+                    "Graves": ["Jungle"],
+                    "Gwen": ["Top"],
+                    "Hecarim": ["Jungle"],
+                    "Heimerdinger": ["Mid", "Top"],
+                    "Illaoi": ["Top"],
+                    "Irelia": ["Top", "Mid"],
+                    "Ivern": ["Jungle"],
+                    "Janna": ["Support"],
+                    "Jarvan IV": ["Jungle"],
+                    "Jax": ["Top", "Jungle"],
+                    "Jayce": ["Top", "Mid"],
+                    "Jhin": ["ADC"],
+                    "Jinx": ["ADC"],
+                    "Kai'Sa": ["ADC"],
+                    "Kalista": ["ADC"],
+                    "Karma": ["Support"],
+                    "Karthus": ["Mid", "Jungle"],
+                    "Kassadin": ["Mid"],
+                    "Katarina": ["Mid"],
+                    "Kayle": ["Top", "Mid"],
+                    "Kayn": ["Jungle"],
+                    "Kennen": ["Top", "Mid"],
+                    "Kha'Zix": ["Jungle"],
+                    "Kindred": ["Jungle"],
+                    "Kled": ["Top"],
+                    "Kog'Maw": ["ADC"],
+                    "LeBlanc": ["Mid"],
+                    "Lee Sin": ["Jungle"],
+                    "Leona": ["Support"],
+                    "Lillia": ["Jungle"],
+                    "Lissandra": ["Mid"],
+                    "Lucian": ["ADC"],
+                    "Lulu": ["Support"],
+                    "Lux": ["Mid", "Support"],
+                    "Malphite": ["Top"],
+                    "Malzahar": ["Mid"],
+                    "Maokai": ["Top", "Support"],
+                    "Master Yi": ["Jungle"],
+                    "Miss Fortune": ["ADC"],
+                    "Mordekaiser": ["Top"],
+                    "Morgana": ["Support", "Mid"],
+                    "Nami": ["Support"],
+                    "Nasus": ["Top"],
+                    "Nautilus": ["Support"],
+                    "Neeko": ["Mid"],
+                    "Nidalee": ["Jungle"],
+                    "Nocturne": ["Jungle"],
+                    "Nunu & Willump": ["Jungle"],
+                    "Olaf": ["Top", "Jungle"],
+                    "Orianna": ["Mid"],
+                    "Ornn": ["Top"],
+                    "Pantheon": ["Top", "Support"],
+                    "Poppy": ["Top", "Jungle"],
+                    "Pyke": ["Support"],
+                    "Qiyana": ["Mid"],
+                    "Quinn": ["Top"],
+                    "Rakan": ["Support"],
+                    "Rammus": ["Jungle"],
+                    "Rek'Sai": ["Jungle"],
+                    "Rell": ["Support"],
+                    "Renekton": ["Top"],
+                    "Rengar": ["Jungle"],
+                    "Riven": ["Top"],
+                    "Rumble": ["Top", "Mid"],
+                    "Ryze": ["Mid", "Top"],
+                    "Samira": ["ADC"],
+                    "Sejuani": ["Jungle"],
+                    "Senna": ["Support", "ADC"],
+                    "Seraphine": ["Support", "Mid"],
+                    "Sett": ["Top", "Support"],
+                    "Shaco": ["Jungle"],
+                    "Shen": ["Top"],
+                    "Shyvana": ["Jungle"],
+                    "Singed": ["Top"],
+                    "Sion": ["Top"],
+                    "Sivir": ["ADC"],
+                    "Skarner": ["Jungle"],
+                    "Sona": ["Support"],
+                    "Soraka": ["Support"],
+                    "Swain": ["Mid", "Support"],
+                    "Sylas": ["Mid", "Top"],
+                    "Syndra": ["Mid"],
+                    "Tahm Kench": ["Support", "Top"],
+                    "Taliyah": ["Mid", "Jungle"],
+                    "Talon": ["Mid"],
+                    "Taric": ["Support"],
+                    "Teemo": ["Top"],
+                    "Thresh": ["Support"],
+                    "Tristana": ["ADC"],
+                    "Trundle": ["Top", "Jungle"],
+                    "Tryndamere": ["Top"],
+                    "Twisted Fate": ["Mid"],
+                    "Twitch": ["ADC"],
+                    "Udyr": ["Jungle"],
+                    "Urgot": ["Top"],
+                    "Varus": ["ADC"],
+                    "Vayne": ["ADC"],
+                    "Veigar": ["Mid"],
+                    "Vel'Koz": ["Mid", "Support"],
+                    "Vex": ["Mid"],
+                    "Vi": ["Jungle"],
+                    "Viego": ["Jungle"],
+                    "Viktor": ["Mid"],
+                    "Vladimir": ["Mid", "Top"],
+                    "Volibear": ["Top", "Jungle"],
+                    "Warwick": ["Jungle", "Top"],
+                    "Wukong": ["Top", "Jungle"],
+                    "Xayah": ["ADC"],
+                    "Xerath": ["Mid"],
+                    "Xin Zhao": ["Jungle"],
+                    "Yasuo": ["Mid", "Top"],
+                    "Yone": ["Mid", "Top"],
+                    "Yorick": ["Top"],
+                    "Yuumi": ["Support"],
+                    "Zac": ["Jungle"],
+                    "Zed": ["Mid"],
+                    "Ziggs": ["Mid"],
+                    "Zilean": ["Support"],
+                    "Zoe": ["Mid"],
+                    "Zyra": ["Support", "Mid"]
+                };
+
+                champions.forEach(champion => {
+                    champion.tags = roles[champion.name] || champion.tags;
+                });
                 
                 const grid = document.getElementById('championGrid');
-                grid.innerHTML = champions
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map(champion => `
-                        <div class="champion">
-                            <a href="champion.html?name=${champion.id}">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.id}.png" 
-                                     alt="${champion.name}"
-                                     title="${champion.name} - ${champion.title}">
-                            </a>
-                        </div>
-                    `).join('');
+                const searchInput = document.getElementById('searchInput');
+                const roleFilter = document.getElementById('roleFilter');
+                const resetButton = document.getElementById('resetButton');
+
+                function filterChampions() {
+                    const searchText = searchInput.value.toLowerCase();
+                    const selectedRole = roleFilter.value;
+
+                    const filteredChampions = champions.filter(champion => {
+                        const matchesName = champion.name.toLowerCase().includes(searchText);
+                        const matchesRole = selectedRole ? champion.tags.some(tag => tag.toLowerCase() === selectedRole.toLowerCase()) : true;
+                        return matchesName && matchesRole;
+                    });
+
+                    grid.innerHTML = filteredChampions
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(champion => `
+                            <div class="champion">
+                                <a href="champion.html?name=${champion.id}">
+                                    <img src="https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.id}.png" 
+                                         alt="${champion.name}"
+                                         title="${champion.name} - ${champion.title}">
+                                </a>
+                            </div>
+                        `).join('');
+                }
+
+                searchInput.addEventListener('input', filterChampions);
+                roleFilter.addEventListener('change', filterChampions);
+                resetButton.addEventListener('click', () => {
+                    searchInput.value = '';
+                    roleFilter.value = '';
+                    filterChampions();
+                });
+
+                filterChampions();
             } catch (error) {
                 console.error('Error loading champions:', error);
             }
@@ -152,8 +400,5 @@
              alt="Mapa Summoner's Rift" 
              class="map-icon">
     </a>
-    <footer id="contact">
-        <p>Kontakt: support@leagueoflegends.com</p>
-    </footer>
 </body>
 </html>

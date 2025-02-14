@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wszystko o Lidze - Tierlisty</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #1e1e2f, #2e2e5c);
+            color: #fff;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .tierlist {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .tierlist-item {
+            display: flex;
+            align-items: center;
+            background: #444;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .tierlist-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            margin-right: 10px;
+        }
+        .tierlist-item h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .tierlist-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #444;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .back-button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tierlisty</h1>
+        <div class="tierlist" id="tierlist">
+            <!-- Tierlisty będą wyświetlane tutaj -->
+        </div>
+        <a href="file:///C:/Users/%C5%81ukasz/Desktop/Liga%20strona/index.html" class="back-button">Powrót do strony głównej</a>
+    </div>
+
+    <script>
+        async function loadTierlist() {
+            try {
+                const response = await fetch('https://api.riotgames.com/lol/league/v4/tierlists?api_key=YOUR_API_KEY');
+                const data = await response.json();
+
+                const tierlistContainer = document.getElementById('tierlist');
+                let html = data.map(champion => `
+                    <div class="tierlist-item">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg" alt="${champion.name}">
+                        <div>
+                            <h2>${champion.name}</h2>
+                            <p>Tier: ${champion.tier}</p>
+                        </div>
+                    </div>
+                `).join('');
+                tierlistContainer.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading tierlist:', error);
+                document.getElementById('tierlist').innerHTML = '<p>Nie udało się załadować tierlisty.</p>';
+            }
+        }
+
+        loadTierlist();
+    </script>
+</body>
+</html>
