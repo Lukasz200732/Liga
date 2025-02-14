@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa Summoner's Rift - League of Legends</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #1e1e2f, #2e2e5c);
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .map-container {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .map-image {
+            width: 100%;
+            max-width: 1000px;
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+        .map-info {
+            background: #444;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .location-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .location {
+            background: #555;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #444;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .back-button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="adam.html" class="back-button">Powrót do strony głównej</a>
+        
+        <div class="map-container">
+            <img src="https://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map11.png" 
+                 alt="Mapa Summoner's Rift" 
+                 class="map-image">
+            
+            <div class="map-info">
+                <h2>Summoner's Rift</h2>
+                <p>Główna mapa w League of Legends, gdzie toczą się bitwy między dwiema drużynami.</p>
+                
+                <div class="location-list">
+                    <div class="location">
+                        <h3>Górna Aleja (Top)</h3>
+                        <p>Miejsce dla czempionów walczących jeden na jednego</p>
+                    </div>
+                    <div class="location">
+                        <h3>Dżungla (Jungle)</h3>
+                        <p>Obszar z potworami neutralnymi i obiektami do zdobycia</p>
+                    </div>
+                    <div class="location">
+                        <h3>Środkowa Aleja (Mid)</h3>
+                        <p>Centralna ścieżka dla magów i zabójców</p>
+                    </div>
+                    <div class="location">
+                        <h3>Dolna Aleja (Bot)</h3>
+                        <p>Aleja dla strzelca (ADC) i wsparcia</p>
+                    </div>
+                    <div class="location">
+                        <h3>Smok (Dragon)</h3>
+                        <p>Potężny cel dający wzmocnienia drużynowe</p>
+                    </div>
+                    <div class="location">
+                        <h3>Baron Nashor</h3>
+                        <p>Najsilniejszy cel na mapie, dający znaczące wzmocnienie</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>League of Legends - Postacie i Umiejętności</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #1e1e2f, #2e2e5c);
+            color: #fff;
+        }
+        header {
+            background: #111;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+        nav {
+            background: #222;
+            overflow: auto;
+        }
+        nav a {
+            float: left;
+            display: block;
+            padding: 14px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background: #444;
+        }
+        .container {
+            padding: 20px;
+        }
+        .champion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .champion {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .champion:hover {
+            transform: scale(1.05);
+            background: #444;
+        }
+        .champion img {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            margin-bottom: 10px;
+            border: 3px solid #FFD700;  /* Poprawiona wartość koloru złotego */
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .champion:hover img {
+            transform: scale(1.1);
+            border-color: #FFA500;  /* Zmiana koloru bordera przy hover */
+        }
+        .champion a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+        footer {
+            background: #111;
+            text-align: center;
+            padding: 10px 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            nav a {
+                float: none;
+                text-align: center;
+            }
+        }
+        .map-icon {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        .map-icon:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>League of Legends</h1>
+        <p>Wybierz swojego bohatera i poznaj jego umiejętności</p>
+    </header>
+    <nav>
+        <a href="#champions">Postacie</a>
+        <a href="rules.html">O Grze</a>
+        <a href="contact.html">Kontakt</a>
+    </nav>
+    <div class="container" id="champions">
+        <h2>Postacie</h2>
+        <div class="champion-grid" id="championGrid">
+            <!-- Champions will be loaded dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Funkcja do ładowania championów
+        async function loadChampions() {
+            const version = '13.24.1'; // Aktualna wersja League of Legends
+            try {
+                const response = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/pl_PL/champion.json`);
+                const data = await response.json();
+                const champions = Object.values(data.data);
+                
+                const grid = document.getElementById('championGrid');
+                grid.innerHTML = champions
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(champion => `
+                        <div class="champion">
+                            <a href="champion.html?name=${champion.id}">
+                                <img src="https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.id}.png" 
+                                     alt="${champion.name}"
+                                     title="${champion.name} - ${champion.title}">
+                            </a>
+                        </div>
+                    `).join('');
+            } catch (error) {
+                console.error('Error loading champions:', error);
+            }
+        }
+
+        // Ładujemy championów gdy strona się załaduje
+        window.addEventListener('load', loadChampions);
+    </script>
+
+    <a href="map.html">
+        <img src="https://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map11.png" 
+             alt="Mapa Summoner's Rift" 
+             class="map-icon">
+    </a>
+    <footer id="contact">
+        <p>Kontakt: support@leagueoflegends.com</p>
+    </footer>
+</body>
+</html>
